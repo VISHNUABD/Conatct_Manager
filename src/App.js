@@ -9,19 +9,29 @@ const App=()=> {
 }
 
 const Contacts=()=>{
+
+  var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   const[name,changename]=useState("");
   const[num,setnum]=useState("")
+  const[email,emailfun]=useState("")
+  const[checkemail,checkemailfun]=useState("")
   const[lst,changelst]=useState([]);
+  
 
 const newname=(event)=>{
 changename(event.target.value);
 }
+
 const newnum=(e)=>{
   setnum(e.target.value)
 }
 
+const emailfunction=(ev)=>{
+  emailfun(ev.target.value)
+}
+
 const handleSubmit=()=>{
-  axios.post("http://localhost:8000/userslist",{name:name,num:num}).then(success=>{
+  axios.post("http://localhost:8000/userslist",{name:name,num:num,email:email}).then(success=>{
     console.log(success.data);
     changelst([...lst,success.data]);
     changename("");
@@ -65,19 +75,23 @@ return (
   <div  style={{background:"lightgrey"}}>
     <form>
       <h2 style={{background:"lightblue",textAlign:"center"}} >CONTACT MANAGER</h2>
-    Name:<input className="form-control" type='text' id='t1' value={ name} onChange={newname}></input>
+    Name:<input className="form-control" style={{width:700,height:40}} type='text' id='t1' value={ name} onChange={newname}></input>
     <br></br>
-    Number:<input className="form-control" type="text" onChange={newnum}></input>
+    <div></div>
+    Number:<input className="form-control" style={{width:700,height:40}}  type="text" onChange={newnum}></input> <br></br>
+    Email:<input className="form-control" style={{width:700,height:40}} type="text" onChange={emailfunction}></input>
      {/* <input type='submit' id='b1' value='submit' onClick={fun}></input>  */}
      <br></br>
      <span ><button className="btn btn-primary btn-lg btn-block" onClick={handleSubmit}>Add Contact</button></span>
      
+     
      {/* <button onClick={handleUpdate}>update</button> */}
      </form>
-     <table className="table table-dark">
+     <table className="table">
        <thead>
          <th>NAME</th>
          <th>NUMBER</th>
+         <th>EMAIL</th>
        </thead>
        <tbody>
            {
@@ -90,8 +104,12 @@ return (
               </td>
               <td>
                 {i.num}
-                <button className="btn btn-info float-right"  style={{marginLeft:"20px"}} onClick={()=>buttonaction(i.id)}>DELETE</button>
-                <button className="btn btn-info float-right" style={{marginLeft:"20px"}} onClick={()=>updateaction(i.id)}>UPDATE</button>
+              </td>
+              <td>
+              {i.email}
+              <button className="btn btn-danger float-right"  style={{marginLeft:"20px"}} onClick={()=>buttonaction(i.id)}>DELETE</button>
+              <button className="btn btn-info float-right" style={{marginLeft:"20px"}} onClick={()=>updateaction(i.id)}>UPDATE</button>
+              
               </td>
               </tr>)
            })
